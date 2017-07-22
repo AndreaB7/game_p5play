@@ -118,7 +118,8 @@ function draw() {
   }
 
   if(keyDown(UP_ARROW)){
-    ship.changeAnimation("thrust");
+    //ship.changeAnimation("thrust");
+    ship.changeAnimation("normal");
     // si no añadimos ship.rotation, la nave no se mueve bien
     ship.addSpeed(0.6, ship.rotation -90);
   } else {
@@ -131,14 +132,14 @@ function draw() {
 
     var bullet = createSprite(ship.position.x, ship.position.y);
     bullet.addImage(temp2);
-    bullet.scale = 0.5;
+    bullet.scale = 0.3;
     bullet.setSpeed(10 + ship.getSpeed(), ship.rotation - 90);
     bullet.life = 30;
     bulletGroup.add(bullet);
   }
 
   // 011 asteroid overlap
-  //asteroidGroup.overlap(bulletGroup, asteroidHit);
+  asteroidGroup.overlap(bulletGroup, asteroidHit);
 
 
   // ship no permite un overlap con los asteroides
@@ -173,7 +174,7 @@ function createAsteroid(type, x, y){
   if(type === 3){
     myAsteroid.scale = 0.7;
   } else if (type === 2){
-    myAsteroid.scale = 0.5;
+    myAsteroid.scale = 0.4;
   } else if (type === 1){
     myAsteroid.scale = 0.2;
   }
@@ -187,27 +188,21 @@ function createAsteroid(type, x, y){
 
 // 011 asteroidHit function
 
-/*function asteroidHit(anyAsteroid){
-  var newType = anyAsteroid.type - 1;
-  console.log(anyAsteroid);
-}
-/*
-function asteroidHit(a,b){
-  var newType = a.type - 1;
-  console.log(a.type);
-/*
+function asteroidHit(asteroid, abullet){
+  var newType = asteroid.type - 1;
+  console.log(newType);
+
   // when you make disappear an asteroid, create 2 news
   if(newType > 0){
-    createAsteroid(newType.asteroid.position.x, asteroid.position.y);
+    createAsteroid(newType, asteroid.position.x, asteroid.position.y);
+    createAsteroid(newType, asteroid.position.x, asteroid.position.y);
   }
 
-  bullet.remove();
-
+  abullet.remove();
   asteroid.remove();
 
 }
 
-*/
 
 
 
