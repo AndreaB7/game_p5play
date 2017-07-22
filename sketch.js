@@ -9,7 +9,8 @@
 // 07 parámetros del keys
 // 08 reajustar el collider + crear nueva imagen para asteroides
 // 09 creamos un COMMAND para los asteriodes (reemplaza antiguo código)
-// 10 crear el random con imágenes de asteroides asteroides
+// 10 crear el random con imágenes de asteroides asteroides + set los parámetros del asteroid
+// 11 relación entre los sprites de los asteroides y los sprites de los bullets
 
 var ship;
 var temp1;
@@ -58,14 +59,11 @@ function setup(){
     //var s = createSprite(random(0, width), random(0, height));
     //s.setSpeed(random(3,5), random(0,360));
     // add es similar a push
-    //asteroidGroup.add(s);
 
     var px = random (0,width);
     var py = random (0,height);
     createAsteroid(3, px, py);
-      console.log(createAsteroid);
   }
-
 }
 
 
@@ -135,7 +133,13 @@ function draw() {
 
   // ship no permite un overlap con los asteroides
   ship.bounce(asteroidGroup);
-}
+
+  // 011 asteroid overlap
+  //asteroidGroup.overlap(bulletGroup, asteroidHit);
+  //asteroidHit(myAsteroid);
+
+} // end function draw
+
 
 function createAsteroid(type, x, y){
 
@@ -147,14 +151,51 @@ function createAsteroid(type, x, y){
   // te permite añadir las imágenes de asteroid y moverlas
   myAsteroid.addImage(img);
   myAsteroid.setSpeed(2.5 - (type/2), random(0, 360));
+  myAsteroid.rotationSpeed = random(-0.5, 0.5);
+  myAsteroid.mass = 2 + myAsteroid.scale;
 
+
+  // see the collision areas
+  myAsteroid.debug = true;
+  myAsteroid.setCollider("circle", 0, 0, 80);
+  // we set "type" as a property of the sprite
+  myAsteroid.type = type;
+  console.log(myAsteroid.type);
+
+  if(type === 3){
+    myAsteroid.scale = 0.7;
+  } else if (type === 2){
+    myAsteroid.scale = 0.5;
+  } else if (type === 1){
+    myAsteroid.scale = 0.2;
+  }
+
+  asteroidGroup.add(myAsteroid);
+}
+
+// 011 asteroidHit function
+
+/*function asteroidHit(anyAsteroid){
+  var newType = anyAsteroid.type - 1;
+  console.log(anyAsteroid);
+}
+/*
+function asteroidHit(a,b){
+  var newType = a.type - 1;
+  console.log(a.type);
+/*
+  // when you make disappear an asteroid, create 2 news
+  if(newType > 0){
+    createAsteroid(newType.asteroid.position.x, asteroid.position.y);
+  }
+
+  bullet.remove();
+
+  asteroid.remove();
 
 }
 
-
-
-
-
+*/
 
 
 
