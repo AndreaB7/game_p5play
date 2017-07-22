@@ -15,7 +15,9 @@
 var ship;
 var temp1;
 var temp2;
+// var asteroidGroup = []; // asi defines que es un array
 var asteroidGroup;
+// var bulletGroup = []; // asi defines que es un array
 var bulletGroup;
 
 var MARGIN = 40;
@@ -32,8 +34,12 @@ function setup(){
   // 001 creas las primeras animaciones con SHIP + el sprite
   createCanvas (800, 600);
 
+
   // sprite = caja mágica de animacions p5.play
   ship = createSprite(width/2, height/2, 200, 200);
+
+  ship.addImage("normal", temp1);
+
   ship.addAnimation("normal", "img/ship1.png", "img/ship4.png");
   ship.addAnimation("green", "img/ship-g0.png", "img/ship-g5.png");
 
@@ -50,8 +56,10 @@ function setup(){
   ship.debug = true;
 
   // 002 creación de los obstáculos de interacción (asteroides) en Sprites
-  // new array
+  // new array --> lo defines dentro de setup como un array = new Group, sino no funcionará
   asteroidGroup = new Group();
+
+  bulletGroup = new Group();
 
   for(var i = 0; i < 10; i++){
     // ======= el siguiente código comentado es la versión anterior ====
@@ -76,8 +84,6 @@ function draw() {
 
   textAlign(CENTER);
   text("Controls Arrow keys + x", width/2, 20);
-
-  drawSprites();
 
 // 004 sprites contenidos en canvas
 // selects sprites in the array "allSprites" and calls the selected Sprite "s" --> propiedad de p5. play
@@ -128,15 +134,19 @@ function draw() {
     bullet.scale = 0.5;
     bullet.setSpeed(10 + ship.getSpeed(), ship.rotation - 90);
     bullet.life = 30;
-    //bulletGroup.add(bullet);
+    bulletGroup.add(bullet);
   }
+
+  // 011 asteroid overlap
+  //asteroidGroup.overlap(bulletGroup, asteroidHit);
+
 
   // ship no permite un overlap con los asteroides
   ship.bounce(asteroidGroup);
 
-  // 011 asteroid overlap
-  //asteroidGroup.overlap(bulletGroup, asteroidHit);
-  //asteroidHit(myAsteroid);
+  // al final de todo
+  drawSprites();
+
 
 } // end function draw
 
@@ -152,15 +162,13 @@ function createAsteroid(type, x, y){
   myAsteroid.addImage(img);
   myAsteroid.setSpeed(2.5 - (type/2), random(0, 360));
   myAsteroid.rotationSpeed = random(-0.5, 0.5);
-  myAsteroid.mass = 2 + myAsteroid.scale;
-
 
   // see the collision areas
   myAsteroid.debug = true;
-  myAsteroid.setCollider("circle", 0, 0, 80);
+
   // we set "type" as a property of the sprite
   myAsteroid.type = type;
-  console.log(myAsteroid.type);
+  //console.log(myAsteroid.type);
 
   if(type === 3){
     myAsteroid.scale = 0.7;
@@ -169,6 +177,10 @@ function createAsteroid(type, x, y){
   } else if (type === 1){
     myAsteroid.scale = 0.2;
   }
+
+  myAsteroid.mass = 2 + myAsteroid.scale;
+
+  myAsteroid.setCollider("circle", 0, 0, 80);
 
   asteroidGroup.add(myAsteroid);
 }
