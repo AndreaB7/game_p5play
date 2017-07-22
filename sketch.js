@@ -11,6 +11,9 @@
 // 09 creamos un COMMAND para los asteriodes (reemplaza antiguo código)
 // 10 crear el random con imágenes de asteroides asteroides + set los parámetros del asteroid
 // 11 relación entre los sprites de los asteroides y los sprites de los bullets
+// 12 debug mode OFF -> set to false
+// 13 añadir sonidos
+// 14 añades función sonido
 
 var ship;
 var temp1;
@@ -19,14 +22,21 @@ var temp2;
 var asteroidGroup;
 // var bulletGroup = []; // asi defines que es un array
 var bulletGroup;
-
 var MARGIN = 40;
 
+var sound1;
+var sound2;
+var sound3;
 
 function preload() {
 
   temp1 = loadImage("img/ship1.png");
   temp2 = loadImage("img/y-bullet.png");
+
+  // 013 añadir sonidos
+  sound1 = loadSound("soundbible/1.mp3");
+  sound2 = loadSound("soundbible/2.mp3");
+  sound3 = loadSound("soundbible/blip.wav");
 }
 
 function setup(){
@@ -48,12 +58,12 @@ function setup(){
   ship.setCollider("circle", 0, 0, 150);
 
   // 005 parámetros de la animation set
-  ship.scale = 0.5;
+  ship.scale = 0.35;
   ship. maxSpeed = 6 ;
   ship.friction = 0.20;
 
   // funciona con el set Collider (el área verde de la ship)
-  ship.debug = true;
+  ship.debug = false;
 
   // 002 creación de los obstáculos de interacción (asteroides) en Sprites
   // new array --> lo defines dentro de setup como un array = new Group, sino no funcionará
@@ -135,15 +145,17 @@ function draw() {
     bullet.scale = 0.3;
     bullet.setSpeed(10 + ship.getSpeed(), ship.rotation - 90);
     bullet.life = 30;
+
+    sound1.play();
+
     bulletGroup.add(bullet);
   }
 
   // 011 asteroid overlap
   asteroidGroup.overlap(bulletGroup, asteroidHit);
 
-
   // ship no permite un overlap con los asteroides
-  ship.bounce(asteroidGroup);
+  ship.bounce(asteroidGroup, playSound);
 
   // al final de todo
   drawSprites();
@@ -151,6 +163,10 @@ function draw() {
 
 } // end function draw
 
+// 014 creas función SOnido
+function playSound(){
+  sound2.play();
+}
 
 function createAsteroid(type, x, y){
 
@@ -165,7 +181,7 @@ function createAsteroid(type, x, y){
   myAsteroid.rotationSpeed = random(-0.5, 0.5);
 
   // see the collision areas
-  myAsteroid.debug = true;
+  myAsteroid.debug = false;
 
   // we set "type" as a property of the sprite
   myAsteroid.type = type;
@@ -188,7 +204,7 @@ function createAsteroid(type, x, y){
 
 // 011 asteroidHit function
 
-function asteroidHit(asteroid, abullet){
+function asteroidHit(asteroid, bullet){
   var newType = asteroid.type - 1;
   console.log(newType);
 
@@ -198,7 +214,9 @@ function asteroidHit(asteroid, abullet){
     createAsteroid(newType, asteroid.position.x, asteroid.position.y);
   }
 
-  abullet.remove();
+  sound3.play();
+
+  bullet.remove();
   asteroid.remove();
 
 }
